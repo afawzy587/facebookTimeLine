@@ -3,6 +3,7 @@
 namespace App\Traits;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+
 trait FailedValidationResponseHandler
 {
   public function failedValidation(Validator $validator)
