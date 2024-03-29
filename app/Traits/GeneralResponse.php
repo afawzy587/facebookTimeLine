@@ -16,4 +16,13 @@ class GeneralResponse
           return response()->json($responce, $code);
  
   }
+
+  public static function responseError($data = null,$code = 400): JsonResponse | true
+  {
+          $responce['code'] =$code;
+          $responce['errors'] = is_string($data) ? ['message' => $data] : $data;
+        
+          return response()->json($responce, $code);
+ 
+  }
 }

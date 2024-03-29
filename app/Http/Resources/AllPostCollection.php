@@ -24,10 +24,10 @@ class AllPostCollection extends ResourceCollection
                 'comments' => $item->comments->map(function ($comment) {
                     return [
                         'id' => $comment->id,
-                        'text' => $comment->text,
+                        'comment' => $comment->comment,
                         'user' => [
-                            'id' => $comment->user->id,
-                            'name' => $comment->user->name,
+                            'id' => $comment->user?->id,
+                            'name' => $comment->user?->name,
                             'image' => 'https://picsum.photos/id/140/300/320'
                         ],
                     ];

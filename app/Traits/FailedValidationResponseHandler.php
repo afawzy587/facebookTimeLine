@@ -9,11 +9,9 @@ trait FailedValidationResponseHandler
   public function failedValidation(Validator $validator)
   {
     throw new HttpResponseException(
-      GeneralResponse::responseMessage(
-        __('fail'),
-        $validator->errors()->first(),
-        422, NULL,
-        $this->transformErrors($validator->errors()->toArray())
+      GeneralResponse::responseError(
+        $this->transformErrors($validator->errors()->toArray()),
+        422
       )
     );
   }
