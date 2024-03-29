@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref ,watch} from 'vue';
 import { Link ,usePage} from '@inertiajs/vue3';
 import CreatePostOverlay from '@/Components/CreatePostOverlay.vue'
 import ImageDisplay from '@/Components/ImageDisplay.vue';
@@ -15,19 +15,27 @@ import DotsGrid from 'vue-material-design-icons/DotsGrid.vue'
 import FacebookMessenger from 'vue-material-design-icons/FacebookMessenger.vue'
 import Bell from 'vue-material-design-icons/Bell.vue'
 import Logout from 'vue-material-design-icons/Logout.vue'
-
+import { useI18n } from 'vue-i18n';
 import { useGeneralStore } from '@/stores/general';
 import { storeToRefs } from 'pinia';
 const useGeneral = useGeneralStore()
 const { isPostOverlay, isCropperModal, isImageDisplay } = storeToRefs(useGeneral)
 const user = usePage().props.auth.user
 let showMenu = ref(false)
+const { locale } = useI18n();
+const isRTL = locale.value === 'ar';
+const textDirection = ref('right-0');
+watch(locale, (newLocale) => {
+    textDirection.value = newLocale === 'en' ? ' right-0 ' : ' left-0 ';
+});
+
 </script>
 
 <template>
     <div
         id="MainNav"
         class="fixed z-50 w-full flex items-center justify-between h-[56px] bg-white shadow-xl border-b"
+        :class="{ 'rtl-content': isRTL, 'ltr-content': !isRTL }"
     >
     <div id="NavLeft" class="flex items-center justify-start w-[260px]">
         <Link href="/" class="pl-3 min-w-[55px]">
@@ -98,7 +106,8 @@ let showMenu = ref(false)
             </button>
             <div
                 v-if="showMenu"
-                class="absolute bg-white shadow-xl top-10 right-0 w-[330px] rounded-lg p-1 border mt-1"
+                :class=textDirection
+                 class="absolute bg-white shadow-xl top-10  w-[330px] rounded-lg p-1 border mt-1"
             >
                 <Link href="/" @click="showMenu = !showMenu">
                     <div class="flex items-center gap-3 hover:bg-gray-200 p-2 rounded-lg">
@@ -114,7 +123,7 @@ let showMenu = ref(false)
                 >
                     <div class="flex items-center gap-3 hover:bg-gray-200 px-2 py-2.5 rounded-lg">
                         <Logout class="pl-2" :size="30"/>
-                        <span>Logout</span>
+                        <span>{{ $t('Logout') }}</span>
                     </div>
                 </Link>
                
@@ -129,10 +138,7 @@ let showMenu = ref(false)
         @showModal="isPostOverlay = false"
     />
 
-    <CropperModal
-        v-if="isCropperModal"
-        @showModal="isCropperModal = false"
-    />
+   
 
     <ImageDisplay
         v-if="isImageDisplay"

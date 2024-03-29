@@ -21,11 +21,13 @@ const props = defineProps({
 });
 
 const { post, user, comments } = toRefs(props)
+const selectedIds = reactive([]);
+const selectAll = reactive(false);
 
 const createComment = () => {
     router.post('/comment', {
         post_id: post.value.id,
-        text: form.comment
+        comment: form.comment
     },
     {
         preserveScroll: true,
@@ -45,6 +47,24 @@ const deletePost = (id) => {
 }
 
 
+const toggleSelection = (id) => {
+    if (selectedIds.includes(id)) {
+        selectedIds.splice(selectedIds.indexOf(id), 1);
+    } else {
+        selectedIds.push(id); 
+    }
+};
+
+const deleteSelectedComments = () => {
+    router.post('/comment/bulck_delete', {
+        comments: selectedIds
+    },
+    {
+        preserveScroll: true,
+    })
+};
+
+
 </script>
 
 <template>
@@ -61,7 +81,8 @@ const deletePost = (id) => {
                     </div>
                 </div>
                 <div class="flex items-center">
-                    <button @click="deletePost(post.id)" class="rounded-full p-1.5 cursor-pointer hover:bg-[#F2F2F2]">
+
+                    <button  v-if="$page.props.auth.user.id === post.user.id" @click="deletePost(post.id)" class="rounded-full p-1.5 cursor-pointer hover:bg-[#F2F2F2]">
                         <Delete fillColor="#64676B"/>
                     </button>
                 </div>
@@ -79,7 +100,7 @@ const deletePost = (id) => {
         <div id="Likes" class="px-5">
             <div class="flex items-center justify-between py-3 border-b">
                 <ThumbUp fillColor="#1D72E2" :size="16"/>
-                <div class="text-sm text-gray-600 font-semibold">{{ comments.length }} comments</div>
+                <div class="text-sm text-gray-600 font-semibold"> {{  $t('comments',{'number':comments.length}) }}</div>
             </div>
         </div>
         <div id="Comments" class="px-3">
@@ -103,15 +124,22 @@ const deletePost = (id) => {
                                 ring-0
                                 focus:ring-0
                             "
-                            placeholder="Write a public comment..."
+                            :placeholder="$t('Write a public comment...')"
                             type="text"
                         >
+                        <div v-if="error">
+                            <div class="w-full bg-red-100 text-red-700 rounded-lg mt-3 text-center">
+                                <div class="p-0.5">
+                                    {{ error }}
+                                </div>
+                            </div>
+                        </div>
                         <button
                             type="button"
                             @click="createComment"
                             class="flex items-center text-sm pl-2 pr-3.5 rounded-full bg-blue-500 hover:bg-blue-600 text-white font-bold"
                         >
-                            <Check fillColor="#FFFFFF" :size="20"/> Send
+                            <Check fillColor="#FFFFFF" :size="20"/> {{ $t("Send") }}
                         </button>
                     </div>
                 </div>
@@ -128,19 +156,29 @@ const deletePost = (id) => {
                         </Link>
                         <div class="flex items-center w-full">
                             <div class="flex items-center bg-[#EFF2F5] text-xs p-2 rounded-lg w-full">
-                                {{ comment.text }}
+                                {{ comment.comment }}
                             </div>
                             <button
-                                v-if="$page.props.auth.user.id === comment.user.id"
+                                v-if="$page.props.auth.user.id === comment.user.id || $page.props.auth.user.id === post.user.id "
                                 @click="deleteComment(comment.id)"
                                 class="rounded-full p-1.5 ml-2 cursor-pointer hover:bg-[#F2F2F2]"
                             >
                                 <Delete fillColor="#64676B"/>
                             </button>
+                            <input  class="rounded-full p-1.5 ml-2 cursor-pointer hover:bg-[#F2F2F2]" v-if="$page.props.auth.user.id === post.user.id" type="checkbox" v-model="selectedIds" :value="comment.id" @change="toggleSelection(comment.id)">
                         </div>
                     </div>
                 </div>
             </div>
+          <div class="flex items-center justify-between pb-2 px-4">
+            <button
+                v-if="$page.props.auth.user.id === post.user.id"
+                @click="deleteSelectedComments"
+                class="rounded-full p-1.5 ml-auto bg-red-500 hover:bg-red-600 text-white font-bold cursor-pointer"
+            >
+                 {{ $t('Delete Selected') }}
+            </button>
+        </div>
         </div>
     </div>
 </template>

@@ -64,7 +64,7 @@ const clearImage = () => {
             <div class="bg-white w-full max-w-[600px] mx-auto shadow-xl rounded-xl">
                 <div class="flex items-center relative my-3.5 mx-1">
                     <div class="text-[22px] font-extrabold w-full text-center">
-                        Create Post
+                        {{ $t('Create Post') }}
                     </div>
                     <div
                         @click="isPostOverlay = false"
@@ -84,7 +84,7 @@ const clearImage = () => {
                                 <div class="font-extrabold">{{ user.name }}</div>
                                 <div class="flex items-center justify-between w-[100px] bg-gray-200 p-0.5 px-2 rounded-lg">
                                     <Earth :size="18"/>
-                                    <span class="font-bold pl-1.5 text-[13px]">Public</span>
+                                    <span class="font-bold pl-1.5 text-[13px]"> {{ $t('Public') }}</span>
                                     <ChevronDown class="pr-10 pl-1" :size="18"/>
                                 </div>
                             </div>
@@ -95,12 +95,12 @@ const clearImage = () => {
                                 v-model="form.title"
                                 type="text"
                                 class="w-full border-0 mt-4 focus:ring-0 text-[22px]"
-                                placeholder="Enter post title"
+                                :placeholder="$t('Enter post title')"
                             >
                             <textarea
                                 v-model="form.body"
                                 class="w-full border-0 mt-4 focus:ring-0 text-[22px]"
-                                placeholder="What's on your mind?"
+                                :placeholder="$t('Whats on your mind')"
                                 cols="30"
                                 rows="3"
                             ></textarea>
@@ -117,7 +117,8 @@ const clearImage = () => {
 
                         <div class="border-2 rounded-xl mt-4 shadow-sm flex items-center justify-between">
                             <div class="font-extrabold p-4">
-                                Add to your post
+                                {{ $t('Add to your post') }}
+                               
                             </div>
                             <div class="flex items-center">
 
@@ -152,7 +153,8 @@ const clearImage = () => {
                             @click="createPost"
                             class="w-full bg-blue-500 hover:bg-blue-600 text-white font-extrabold p-1.5 mt-3 rounded-lg"
                         >
-                            Post
+                            
+                            {{ $t('Post') }}
                         </button>
 
                     </div>

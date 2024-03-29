@@ -32,7 +32,7 @@ const user = usePage().props.auth.user
                 @click="isPostOverlay = true"
                 class="flex items-center justify-start bg-[#EFF2F5] p-2 rounded-full w-full cursor-pointer"
             >
-                <div class="text-left pl-2">{{ placeholder }}</div>
+                <div class="text-left pl-2">{{ $t('Whats on your mind',{'user':user.name}) }} </div>
             </div>
         </div>
 
@@ -40,7 +40,7 @@ const user = usePage().props.auth.user
            
             <button class="flex items-center justify-center p-1 hover:bg-[#F2F2F2] w-full rounded-lg mx-1 cursor-pointer">
                 <Image :size="35" fillColor="#43BE62"/>
-                <div class="text-[#6F7275] font-bold">Photo</div>
+                <div class="text-[#6F7275] font-bold">{{ $t('Photo') }}</div>
             </button>
            
         </div>
