@@ -5,7 +5,7 @@ namespace App\Repositories\Interfaces;
 use App\Models\Post;
 use Error;
 use Illuminate\Http\Request;
-interface PostRepositoryInterface
+interface PostRepositoryInterface extends  BaseRepositoryInterface 
 {
     public function getPosts(): object;
     public function add(Request $request) : Post | Error;

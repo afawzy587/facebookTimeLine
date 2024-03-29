@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Traits\FailedValidationResponseHandler;
 use Illuminate\Foundation\Http\FormRequest;
 
-class PostCreateRequest extends FormRequest
+class CommentCreateRequest extends FormRequest
 {
 
     // use FailedValidationResponseHandler;
@@ -25,9 +25,8 @@ class PostCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'  => ['required','string', 'min:3','max:250'],
-            'body'   => ['required','string', 'min:3','max:1000'],
-            'image'  => ['nullable','file', 'image','mimes:png,jpg', 'max:25600'] 
+            'post_id'   => ['required','integer','exists:posts,id'],
+            'comment'   => ['required','string', 'min:3','max:250'],
         ];
     }
 }

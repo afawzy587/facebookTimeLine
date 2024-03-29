@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -16,20 +18,17 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware('auth','setlocale')->group(function () {
+    Route::get('/', [PostController::class,'index'])->name('posts.index');
 
-Route::middleware('auth')->group(function () {
+    Route::post('/post', [PostController::class, 'store'])->name('post.store');
+    Route::delete('/post/{id}', [PostController::class, 'destroy'])->name('post.destroy');
+
+    Route::post('/comment', [CommentController::class, 'store'])->name('comment.store');
+    Route::delete('/comment/{id}', [CommentController::class, 'destroy'])->name('comment.destroy');
+    Route::post('/comment/bulck_delete', [CommentController::class, 'bulck_delete'])->name('comment.bulck_delete');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
